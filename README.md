@@ -84,6 +84,7 @@
   - je maakt ook een vector aan barrier net bij de agent bij de initalize()
   - als een item die barier aan raakt moet je ook de juiste reward bepalen
   - geef de script aan de agent
+  - geef de juiste parameters aan het script
 - stap 7: start de ml agent met anaconda
   - ga naar de project directory en in de assets
   - gebruik deze comando mlagents-learn config/jumper.yaml --run-id=CubeAgent
