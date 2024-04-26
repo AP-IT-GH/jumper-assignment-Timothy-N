@@ -8,9 +8,7 @@
 - Agents: de omgeving heeft 1 agent.
 - Agent Reward Function:
   - raakt de coin +1
-  - raakt niet de coin -1
   - raakt het obstakel -1
-  - raakt niet de obstakel +1
 - Behavior Parameters:
   - Visual Observations: kijkt naar de opkomende objecten
   - kijkt of hij de vloer raakt
@@ -81,8 +79,6 @@
   - voor observaties moet hij de local positie hebben
   - bij elke collision moet je kijken met welke tag en dan je reward bepalen
   - als het met de tag floor is moet je een boolean veranderen om het te kunnen laten springen
-  - je maakt ook een vector aan barrier net bij de agent bij de initalize()
-  - als een item die barier aan raakt moet je ook de juiste reward bepalen
   - geef de script aan de agent
   - geef de juiste parameters aan het script
 - stap 7: start de ml agent met anaconda
@@ -92,8 +88,8 @@
 
 # test
 
-het testen ging wat moeizaam veel trial en error maar uiteindelijk was er een resultaat dat acceptabel is.
-![image](https://github.com/AP-IT-GH/jumper-assignment-Timothy-N/assets/84501282/5e172643-ef33-40eb-8c7a-5693aa7d185a)
+het testen ging heel moeilijk ik heb moeite met mijn agent te laten springen hierdoor is de opdracht niet echt gelukt. 
+
 
 
  
