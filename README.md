@@ -90,5 +90,11 @@
   - gebruik deze comando mlagents-learn config/jumper.yaml --run-id=CubeAgent
   - ga naar je unity project en start het
 
+# test
+
+het testen ging wat moeizaam veel trial en error maar uiteindelijk was er een resultaat dat acceptabel is.
+![image](https://github.com/AP-IT-GH/jumper-assignment-Timothy-N/assets/84501282/5e172643-ef33-40eb-8c7a-5693aa7d185a)
+
+
  
 
