@@ -9,102 +9,73 @@ public class CubeAgentRay : Agent
     public GameObject prefabEnemy;
     public GameObject prefabCoin;
     private GameObject spawnedItem;
-    private Vector3 barryPosition;
+    private bool canJump = true;
+
     public override void Initialize()
     {
-        barryPosition = this.GetComponent<Transform>().position;
+        
     }
-    int currentItem;
+
     public override void OnEpisodeBegin()
     {
-        Debug.Log("====NEW ROUND====");
-        if (this.transform.localPosition.y < -10)
-            this.transform.localPosition = new Vector3(6, -3, 0); this.transform.localRotation = Quaternion.identity;
+        if (transform.localPosition.y < -10)
+        {
+            transform.localPosition = new Vector3(6, -3, 0);
+            transform.localRotation = Quaternion.identity;
+        }
 
         if (spawnedItem != null)
             Destroy(spawnedItem);
 
-        currentItem = Random.Range(1, 3);
+        int currentItem = Random.Range(1, 3);
 
-        if(currentItem == 1)
-			spawnedItem = Instantiate(prefabEnemy, new Vector3(barryPosition.x + 6.25f, barryPosition.y, barryPosition.z), Quaternion.identity);
-        else
-			spawnedItem = Instantiate(prefabCoin, new Vector3(barryPosition.x + 6.25f, barryPosition.y, barryPosition.z), Quaternion.identity);
+        spawnedItem = Instantiate(currentItem == 1 ? prefabEnemy : prefabCoin,
+                                   new Vector3(transform.position.x + 7f, transform.position.y, transform.position.z),
+                                   Quaternion.identity);
 
-        int randomSpeed = Random.Range(-7, -4);
-
-		spawnedItem.GetComponent<Rigidbody>().AddForce(
-                new Vector3(randomSpeed, 0, 0),
-                ForceMode.Impulse
-            );
+        int randomSpeed = Random.Range(-6, -2);
+        spawnedItem.GetComponent<Rigidbody>().AddForce(new Vector3(randomSpeed, 0, 0), ForceMode.Impulse);
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Target en Agent posities
-        sensor.AddObservation(currentItem);
-        sensor.AddObservation(this.transform.localPosition);
-
+        sensor.AddObservation(Random.Range(1, 3)); // Random observation
+        sensor.AddObservation(transform.localPosition); // Agent's position
     }
 
-    public float speedMultiplier = 0.1f;
-    public float rotationMultiplier = 5;
-    private bool canJump = true;
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        // Acties, size = 2
-        if (canJump && actionBuffers.ContinuousActions[0] > 0)
+        float jumpAction = actionBuffers.ContinuousActions[0];
+
+        if (canJump && jumpAction > 0)
         {
-            Debug.Log("jumped");
+            Debug.Log("Jumped");
+            GetComponent<Rigidbody>().AddForce(new Vector3(0, 7, 0), ForceMode.Impulse);
             canJump = false;
-            this.GetComponent<Rigidbody>()
-                .AddForce(
-                new Vector3(0, 7, 0),
-                ForceMode.Impulse
-            );
-            
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.tag.Contains("Enemy"))
+        if (collision.collider.CompareTag("Enemy"))
         {
-            Debug.Log("Touched box collider! -1f");
+           
             SetReward(-1f);
+            Debug.Log("Touched box collider! -1f");
             EndEpisode();
         }
-        if (collision.collider.tag.Contains("Coin"))
+        else if (collision.collider.CompareTag("Coin"))
         {
-            Debug.Log("Touched coin! +1f");
+            
             SetReward(1f);
+            Debug.Log("Touched coin! +1f");
             EndEpisode();
         }
-        if (collision.collider.tag.Contains("Floor"))
+        else if (collision.collider.CompareTag("Floor"))
         {
             canJump = true;
-            Debug.Log("can jump");
         }
     }
-    
-    public override void Heuristic(in ActionBuffers actionsOut)
-    {
-        var continuousActionsOut = actionsOut.ContinuousActions;
-        continuousActionsOut[0] = Input.GetAxis("Vertical");
-    }
-    
-    public void Barrier_MushroomTouched()
-    {
-        Debug.Log("Full reward! +1f");
-        SetReward(1f);
-        EndEpisode();
-    }
 
-    public void Barrier_CoinTouched()
-    {
-        Debug.Log("Didn't touch the coin!, -1f");
-        SetReward(-1f);
-        EndEpisode();
-    }
 
 }
